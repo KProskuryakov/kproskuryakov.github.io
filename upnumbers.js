@@ -4,8 +4,8 @@ window.addEventListener("load", () => {
 	const increaseRateId = "increase-rate-button";
 	const increaseRateLabelId = "increase-rate-label";
 
-	const numberP = document.getElementById(theNumberId);
-	const rateP = document.getElementById(theRateId);
+	const numberh2 = document.getElementById(theNumberId);
+	const rateh2 = document.getElementById(theRateId);
 	const increaseRateButton = document.getElementById(increaseRateId);
 	const increaseRateLabel = document.getElementById(increaseRateLabelId);
 
@@ -18,6 +18,7 @@ window.addEventListener("load", () => {
 	let increaseRateCostMult = 1.4;
 	let increaseRateCount = 0;
 
+	increaseRateButton.disabled = true;
 	increaseRateButton.addEventListener("click", () => {
 		if (number < increaseRateCost) {
 			increaseRateButton.disabled = true;
@@ -28,17 +29,21 @@ window.addEventListener("load", () => {
 		increaseRateCount += 1;
 		rate = baseRate + (increaseRateCount * increaseRateAmount);
 
+		updateAllTheHtml();
+	});
+
+	function updateAllTheHtml() {
 		increaseRateLabel.textContent = `Cost: ${increaseRateCost}`;
 		increaseRateButton.textContent = `+${increaseRateAmount}`;
-		rateP.textContent = `${rate}`;
-	});
+		rateh2.textContent = `${rate}`;
+		numberh2.textContent = number;
+		increaseRateButton.disabled = number < increaseRateCost ? true : false;
+	}
 
 	function run() {
 		number += rate;
 
-		numberP.textContent = number;
-
-		increaseRateButton.disabled = number < increaseRateCost ? true : false;
+		updateAllTheHtml();
 
 		setTimeout(run, 1000);
 	}
