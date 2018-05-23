@@ -1,0 +1,22 @@
+{
+  "name": "kproskuryakov.github.io",
+  "version": "1.0.0",
+  "description": "Kproskuryakovs static site",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KProskuryakov/kproskuryakov.github.io.git"
+  },
+  "author": "kproskuryakov",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/KProskuryakov/kproskuryakov.github.io/issues"
+  },
+  "homepage": "https://github.com/KProskuryakov/kproskuryakov.github.io#readme",
+  "devDependencies": {
+    "eslint": "^4.19.1"
+  }
+}
