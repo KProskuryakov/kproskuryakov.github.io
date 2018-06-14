@@ -1,192 +1,231 @@
 "use strict";
 
-const numCols = 5;
-const numRows = 5;
-
-/**
- * @typedef {Object} Dir
- * @prop {String} name
- * @prop {Dir} opposite
- * @prop {Dir} clockwise
- * @prop {Dir} counterclockwise
- */
 const Dirs = (() => {
-	/** @type {Dir} */
-	const up = {name: "Up"};
-	/** @type {Dir} */
-	const down = {name: "Down"};
-	/** @type {Dir} */
-	const right = {name: "Right"};
-	/** @type {Dir} */
-	const left = {name: "Left"};
-	/** @type {Dir} */
-	const none = {name: "None"};
+	const none = 0;
+	const up = 1;
+	const down = 2;
+	const left = 3;
+	const right = 4;
 
-	up.opposite = down;
-	up.clockwise = right;
-	up.counterclockwise = left;
+	const dirData = [];
+	dirData[none] = { name: "None", opposite: none, clockwise: none, counterclockwise: none };
+	dirData[up] = { name: "Up", opposite: down, clockwise: right, counterclockwise: left };
+	dirData[down] = { name: "Down", opposite: up, clockwise: left, counterclockwise: right };
+	dirData[left] = { name: "Left", opposite: right, clockwise: up, counterclockwise: down };
+	dirData[right] = { name: "Right", opposite: left, clockwise: down, counterclockwise: up };
 
-	down.opposite = up;
-	down.clockwise = left;
-	down.counterclockwise = right;
+	const opposite = (dir) => {
+		return dirData[dir].opposite;
+	};
 
-	right.opposite = left;
-	right.clockwise = down;
-	right.counterclockwise = up;
+	const clockwise = (dir) => {
+		return dirData[dir].clockwise;
+	};
 
-	left.opposite = right;
-	left.clockwise = up;
-	left.counterclockwise = down;
+	const counterclockwise = (dir) => {
+		return dirData[dir].counterclockwise;
+	};
 
-	none.opposite = none;
-	none.clockwise = none;
-	none.counterclockwise = none;
-
-	return Object.freeze({up, down, left, right, none});
+	return Object.freeze({ none, up, down, left, right, opposite, clockwise, counterclockwise });
 })();
 
-/**
- * @typedef {Object} Color
- * @prop {Number} i
- * @prop {String} hex
- * @prop {(o: Color) => Color} add
- * @prop {String} name
- */
-
 const Colors = (() => {
-	/** @type {Color} */
-	const black = {};
-	const blue = {};
-	const green = {};
-	const cyan = {};
-	const red = {};
-	const magenta = {};
-	const yellow = {};
-	const white = {};
+	const black = 0;
+	const blue = 1;
+	const green = 2;
+	const cyan = 3;
+	const red = 4;
+	const magenta = 5;
+	const yellow = 6;
+	const white = 7;
 
-	const colorList = [black, blue, green, cyan, red, magenta, yellow, white];
-	const colorMap = {black, blue, green, cyan, red, magenta, yellow, white};
+	const colorList = [
+		{ name: "Black" },
+		{ name: "Blue" },
+		{ name: "Green" },
+		{ name: "Cyan" },
+		{ name: "Red" },
+		{ name: "Magenta" },
+		{ name: "Yellow" },
+		{ name: "White" }
+	];
 
 	colorList.forEach((c, i) => {
-		c.i = i;
 		const r = i & 4 == 4 ? "ff" : "00";
 		const g = i & 2 == 2 ? "ff" : "00";
 		const b = i & 1 == 1 ? "ff" : "00";
 		c.hex = `#${r}${g}${b}`;
-		c.add = (o) => {
-			return colorList[c.i & o.i];
-		};
+		c.index = i;
 	});
 
-	for (const prop in colorMap) {
-		colorMap[prop].name = prop.charAt(0).toUpperCase + prop.slice(1);
-	}
+	const add = (c1, c2) => {
+		return colorList[c1.index & c2.index].index;
+	};
 
-	return Object.freeze({black, blue, green, cyan, red, magenta, yellow, white});
+	const subtract = (c1, c2) => {
+		return colorList[c1.index & ~c2.index].index;
+	};
+
+	const hex = (c) => {
+		return colorList[c].hex;
+	};
+
+	const name = (c) => {
+		return colorList[c].name;
+	};
+
+	return Object.freeze({ black, blue, green, cyan, red, magenta, yellow, white, add, subtract, hex, name });
 })();
 
 const Sizes = (() => {
-	const small = {name: "Small", px: 4};
-	const medium = {name: "Medium", px: 8};
-	const large = {name: "Large", px: 12};
+	const small = 0;
+	const medium = 1;
+	const large = 2;
 
-	small.smaller = small;
-	small.bigger = medium;
+	const sizes = [
+		{ name: "Small" },
+		{ name: "Medium" },
+		{ name: "Large" }
+	];
 
-	medium.smaller = small;
-	medium.bigger = large;
-	
-	large.smaller = medium;
-	large.bigger = large;
+	const shrink = (size) => {
+		return Math.max(size - 1, small);
+	};
 
-	return Object.freeze({small, medium, large});
+	const grow = (size) => {
+		return Math.min(size + 1, large);
+	};
+
+	const name = (size) => {
+		return sizes[size].name;
+	};
+
+	return Object.freeze({ small, medium, large, shrink, grow, name });
 })();
 
-const createLaser = (spec) => {
-	let x = spec.x || 0;
-	let y = spec.y || 0;
-	let dir = spec.dir || Dirs.none;
-	let color = spec.color || Colors.black;
-	let size = spec.size || Sizes.medium;
+const Lasers = (() => {
+	const create = (spec) => {
+		let { x, y, dir, color, size } = spec;
+		x = x || 0;
+		y = y || 0;
+		dir = dir || Dirs.none;
+		color = color || Colors.black;
+		size = size || Sizes.medium;
 
-	if (spec.edge) {
-		if (spec.edge <= numCols) {
-			x = spec.edge - 1;
-		} else {
-			
-		}
-	}
+		return { x, y, dir, color, size };
+	};
 
-	const next = () => {
+	const next = (laser) => {
+		const { x, y, dir, color, size } = laser;
+		const result = { x, y, dir, color, size };
 		if (dir == Dirs.left) {
-			return createLaser({x: x - 1, y, dir, color, size});
+			result.x = x - 1;
+			return result;
 		} else if (dir == Dirs.right) {
-			return createLaser({x: x + 1, y, dir, color, size});
+			result.x = x + 1;
+			return result;
 		} else if (dir == Dirs.up) {
-			return createLaser({x, y: y - 1, dir, color, size});
+			result.y = y - 1;
+			return result;
 		} else if (dir == Dirs.down) {
-			return createLaser({x, y: y + 1, dir, color, size});
+			result.y = y + 1;
+			return result;
+		} else {
+			return result;
 		}
 	};
 
-	return Object.freeze({next});
-}
+	const copy = (laser) => {
+		const { x, y, color, size, dir } = laser;
+		return { x, y, color, size, dir };
+	};
 
-class Piece {
-	constructor() {
+	const addColor = (laser, color) => {
+		laser.color = Colors.add(laser.color, color);
+	};
 
-	}
-}
+	const subtractColor = (laser, color) => {
+		laser.color = Colors.subtract(laser.color, color);
+	};
 
-class LaserGrid {
+	const shrink = (laser) => {
+		laser.size = Sizes.shrink(laser.size);
+	};
 
-	/**
-	 * 
-	 * @param {{width: Number, height: Number}} dimensions 
-	 */
-	constructor(dimensions) {
-		this.width = dimensions.width;
-		this.height = dimensions.height;
-		this.data = [];
-		this.pieces = [];
-	}
+	const grow = (laser) => {
+		laser.size = Sizes.grow(laser.size);
+	};
 
-	/**
-	 * Gets the piece at the location in the 2d grid
-	 * @param {{x: Number, y: Number}} loc 
-	 */
-	getPieceAtLoc(loc) {
-		if (loc.x < 0 || loc.x >= this.width || loc.y < 0 || loc.y >= this.height) {
-			throw new Error(`Like, don't do that. ${loc.x} ${loc.y}`);
+	return Object.freeze({ create, next, copy, addColor, subtractColor, shrink, grow });
+})();
+
+const Grids = (() => {
+	const create = (dimensions) => {
+		const { width, height } = dimensions;
+		return { width, height, data: [], pieces: [] };
+	};
+
+	const createLaserFromEdge = (grid, edge) => {
+		let {x, y, color, dir, size} = Lasers.create({});
+		const {width, height} = grid;
+		if (edge <= width) {
+			x = edge - 1;
+			dir = Dirs.down;
+			return Lasers.create({})
+		} else if (edge <= width + height) {
+			x = width - 1;
+			y = edge - width;
+			dir = Dirs.left;
+		} else if (edge <= width * 2 + height) {
+			x = width * 2 + height - edge;
+			y = height - 1;
+			dir = Dirs.up;
+		} else {
+			y = width * 2 + height * 2 - edge;
+			dir = Dirs.right;
 		}
-		return this.data[loc.y * this.width + loc.x];
-	}
-}
+		return {x, y, color, dir, size};
+	};
+
+	const isLaserOnEdge = (grid, laser) => {
+		const { x, y } = laser;
+		const { width, height } = grid;
+		return x == -1 || y == -1 || x == width || y == height;
+	};
+
+	const getPieceAtLoc = (grid, loc) => {
+		const { width, data } = grid;
+		const { x, y } = loc;
+		return data[y * width + x];
+	};
+
+	return Object.freeze({ create, isLaserOnEdge, getPieceAtLoc });
+})();
 
 window.addEventListener("load", () => {
 	const canvasId = "lasergame-canvas";
 
-	const grid = new LaserGrid(numCols);
+	const grid = Grids.create({ width: 5, height: 5 });
 
 	/** @type {HTMLCanvasElement} */
 	const canvas = document.getElementById(canvasId);
 	const ctx = canvas.getContext("2d");
 
 	function drawBackground() {
-		const xSpace = canvas.width / (numCols + 2);
-		const ySpace = canvas.height / (numRows + 2);
+		const xSpace = canvas.width / (grid.width + 2);
+		const ySpace = canvas.height / (grid.height + 2);
 
 		ctx.fillStyle = "#B0B0B0";
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 		ctx.strokeStyle = "#000000";
 		ctx.beginPath();
-		for (let i = 1; i < numCols + 2; i++) {
+		for (let i = 1; i < grid.width + 2; i++) {
 			const x = i * xSpace;
 			ctx.moveTo(x, ySpace);
 			ctx.lineTo(x, canvas.height - ySpace);
 		}
-		for (let i = 1; i < numRows + 2; i++) {
+		for (let i = 1; i < grid.height + 2; i++) {
 			const y = i * ySpace;
 			ctx.moveTo(xSpace, y);
 			ctx.lineTo(canvas.width - xSpace, y);
