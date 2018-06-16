@@ -1,3 +1,5 @@
+"use strict";
+
 window.addEventListener("load", () => {
 	const theNumberId = "the-number";
 	const theRateId = "the-rate";
