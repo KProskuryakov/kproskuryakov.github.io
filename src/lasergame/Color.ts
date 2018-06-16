@@ -34,12 +34,12 @@ export class Color {
         this.hex = `#${r}${g}${b}`;
     }
 
-    public add<Colorable extends { color: Color}>(c: Colorable) {
+    public addTo<Colorable extends { color: Color}>(c: Colorable) {
         c.color = Color.colors[this._name & c.color._name];
         return c;
     }
 
-    public subtract<Colorable extends { color: Color}>(c: Colorable) {
+    public subtractFrom<Colorable extends { color: Color}>(c: Colorable) {
         c.color = Color.colors[this._name & ~c.color._name];
         return c;
     }
