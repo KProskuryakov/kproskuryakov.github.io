@@ -6,10 +6,10 @@ window.addEventListener("load", () => {
 	const increaseRateId = "increase-rate-button";
 	const increaseRateLabelId = "increase-rate-label";
 
-	const numberh2 = document.getElementById(theNumberId);
-	const rateh2 = document.getElementById(theRateId);
-	const increaseRateButton = document.getElementById(increaseRateId);
-	const increaseRateLabel = document.getElementById(increaseRateLabelId);
+	const numberh2 = <HTMLHeadingElement>document.getElementById(theNumberId);
+	const rateh2 = <HTMLHeadingElement>document.getElementById(theRateId);
+	const increaseRateButton = <HTMLButtonElement>document.getElementById(increaseRateId);
+	const increaseRateLabel = <HTMLLabelElement>document.getElementById(increaseRateLabelId);
 
 	let number = 0;
 	let rate = 1;
@@ -38,7 +38,7 @@ window.addEventListener("load", () => {
 		increaseRateLabel.textContent = `Cost: ${increaseRateCost}`;
 		increaseRateButton.textContent = `+${increaseRateAmount}`;
 		rateh2.textContent = `${rate}`;
-		numberh2.textContent = number;
+		numberh2.textContent = number.toString();
 		increaseRateButton.disabled = number < increaseRateCost ? true : false;
 	}
 
