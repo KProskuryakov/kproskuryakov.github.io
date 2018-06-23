@@ -26,31 +26,65 @@ export class Grid {
         return data[y * numSpacesX + x]
     }
 
-    public drawGrid(spec: { ctx: CanvasRenderingContext2D, offsets: { xOffset: number, yOffset: number } }) {
-        const { ctx, offsets } = spec
+    public drawGrid(spec: { gridCtx: CanvasRenderingContext2D, offsets: { xOffset: number, yOffset: number } }) {
+        const { gridCtx, offsets } = spec
         const { xOffset, yOffset } = offsets
-        const { squareWidth, squareHeight } = this
+        const { squareWidth, squareHeight, pixelHeight, pixelWidth, numSpacesX, numSpacesY } = this
 
-        ctx.translate(xOffset, yOffset)
+        gridCtx.translate(xOffset, yOffset)
 
-        ctx.fillStyle = "#B0B0B0"
-        ctx.fillRect(0, 0, this.pixelWidth, this.pixelHeight)
+        gridCtx.fillStyle = "#B0B0B0"
+        gridCtx.fillRect(0, 0, pixelWidth, pixelHeight)
 
-        ctx.strokeStyle = "#000000"
-        ctx.lineWidth = 2
-        ctx.beginPath()
-        for (let i = 1; i < this.numSpacesX + 2; i++) {
+        gridCtx.strokeStyle = "#000000"
+        gridCtx.lineWidth = 2
+        gridCtx.beginPath()
+        for (let i = 1; i < numSpacesX + 2; i++) {
             const x = i * squareWidth
-            ctx.moveTo(x, squareHeight)
-            ctx.lineTo(x, this.pixelHeight - squareHeight)
+            gridCtx.moveTo(x, squareHeight)
+            gridCtx.lineTo(x, pixelHeight - squareHeight)
         }
-        for (let i = 1; i < this.numSpacesY + 2; i++) {
+        for (let i = 1; i < numSpacesY + 2; i++) {
             const y = i * squareHeight
-            ctx.moveTo(squareWidth, y)
-            ctx.lineTo(this.pixelWidth - squareWidth, y)
+            gridCtx.moveTo(squareWidth, y)
+            gridCtx.lineTo(pixelWidth - squareWidth, y)
         }
-        ctx.stroke()
+        gridCtx.stroke()
 
-        ctx.translate(-xOffset, -yOffset)
+        const halfY = squareHeight / 2
+        const halfX = squareWidth / 2
+        gridCtx.fillStyle = "#000000"
+        gridCtx.textBaseline = "middle"
+        gridCtx.font = '32px serif'
+
+        for (let i = 1; i <= numSpacesX; i++) {
+            const x = i * squareWidth + halfX
+            const numText = i.toString()
+            gridCtx.fillText(numText, x - gridCtx.measureText(numText).width / 2, halfY)
+        }
+
+        const farEdgeX = (numSpacesX + 1) * squareWidth + halfX
+
+        for (let i = 1; i <= numSpacesY; i++) {
+            const y = i * squareHeight + halfY
+            let numText = (i + numSpacesX).toString()
+            gridCtx.fillText(numText, farEdgeX - gridCtx.measureText(numText).width / 2, y)
+        }
+
+        const farEdgeY = (numSpacesY + 1) * squareHeight + halfY
+
+        for (let i = 1; i <= numSpacesX; i++) {
+            const x = i * squareWidth + halfX
+            const numText = (numSpacesX * 2 + numSpacesY + 1 - i).toString()
+            gridCtx.fillText(numText, x - gridCtx.measureText(numText).width / 2, farEdgeY)
+        }
+
+        for (let i = 1; i <= numSpacesY; i++) {
+            const y = i * squareHeight + halfY
+            const numText = (numSpacesX * 2 + numSpacesY * 2 + 1 - i).toString()
+            gridCtx.fillText(numText, halfX - gridCtx.measureText(numText).width / 2, y)
+        }
+
+        gridCtx.translate(-xOffset, -yOffset)
     }
 }

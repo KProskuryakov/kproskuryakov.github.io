@@ -24,7 +24,7 @@ const pieceData: PieceDataList = {
     forwardSlash: {
         name: "Forward Slash",
         apply(laser) {
-            let { dir } = laser;
+            let { dir } = laser
             if (dir == Dir.left) {
                 dir = Dir.down
             } else if (dir == Dir.down) {
@@ -49,7 +49,7 @@ const pieceData: PieceDataList = {
     backSlash: {
         name: "Back Slash",
         apply(laser) {
-            let { dir } = laser;
+            let { dir } = laser
             if (dir == Dir.left) {
                 dir = Dir.up
             } else if (dir == Dir.down) {
@@ -192,7 +192,7 @@ const pieceData: PieceDataList = {
             ctx.fillRect(chunkX, chunkY, chunkX, chunkY)
         }
     }
-};
+}
 
 export class Piece {
     private _x: number = 0
@@ -201,7 +201,7 @@ export class Piece {
     private _placed: Boolean = false
 
     public constructor(spec: { pieceDataName: keyof PieceDataList }) {
-        const { pieceDataName } = spec;
+        const { pieceDataName } = spec
         this._pieceData = pieceData[pieceDataName]
     }
 

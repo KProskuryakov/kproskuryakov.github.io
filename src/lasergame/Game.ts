@@ -1,13 +1,18 @@
 import { Grid } from "./Grid"
 
 window.addEventListener("load", () => {
-    const canvasId = "lasergame-canvas"
+    const canvasId = "grid-canvas"
+    const toolbarId = "toolbar-canvas"
 
-    const canvas = <HTMLCanvasElement>document.getElementById(canvasId)
-    const ctx = canvas.getContext("2d")!
+    const gridCanvas = <HTMLCanvasElement>document.getElementById(canvasId)
+    const gridCtx = gridCanvas.getContext("2d")!
 
-    const grid = new Grid({ numSpacesX: 5, numSpacesY: 5, pixelWidth: canvas.width, pixelHeight: canvas.height })
+    const toolbarCanvas = <HTMLCanvasElement>document.getElementById(toolbarId)
+    const toolbarCtx = toolbarCanvas.getContext("2d")
+
+    const grid = new Grid({ numSpacesX: 5, numSpacesY: 5, pixelWidth: gridCanvas.width, pixelHeight: gridCanvas.height })
     const offsets = { xOffset: 0, yOffset: 0 }
 
-    grid.drawGrid({ ctx, offsets })
-});
+    grid.drawGrid({ gridCtx, offsets })
+})
+
