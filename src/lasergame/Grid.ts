@@ -55,7 +55,7 @@ export class Grid {
         const halfX = squareWidth / 2
         gridCtx.fillStyle = "#000000"
         gridCtx.textBaseline = "middle"
-        gridCtx.font = '32px serif'
+        gridCtx.font = '32px arial'
 
         for (let i = 1; i <= numSpacesX; i++) {
             const x = i * squareWidth + halfX
