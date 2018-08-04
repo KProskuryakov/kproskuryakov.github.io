@@ -1,36 +1,5 @@
-enum SizeName {
-    Small, Medium, Large
-}
+export type Size = "Small" | "Medium" | "Large"
 
-export class Size {
-    private static readonly sizes = Object.freeze([
-        new Size(SizeName.Small),
-        new Size(SizeName.Medium),
-        new Size(SizeName.Large)
-    ]);
-
-    public static readonly small = Size.sizes[SizeName.Small];
-    public static readonly medium = Size.sizes[SizeName.Medium];
-    public static readonly large = Size.sizes[SizeName.Large];
-
-    private readonly _name: SizeName;
-    private constructor(name: SizeName) {
-        this._name = name;
-    }
-
-    public get bigger() {
-        return Size.sizes[Math.min(this._name + 1, SizeName.Large)];
-    }
-
-    public get smaller() {
-        return Size.sizes[Math.max(this._name - 1, SizeName.Small)];
-    }
-
-    public get pixels() {
-        return (this._name + 1) * 4;
-    }
-
-    public get name() {
-        return SizeName[this._name];
-    }
-}
+export const size_pixels = (s: Size) => s === "Small" ? 4 : s === "Medium" ? 8 : s === "Large" ? 12 : 8
+export const size_smaller = (s: Size) => s === "Large" ? "Medium" : "Small"
+export const size_larger = (s: Size) => s === "Small" ? "Medium" : "Large"

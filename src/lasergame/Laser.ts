@@ -1,110 +1,53 @@
-import { Color } from "./Color";
-import { Dir } from "./Dir";
-import { Grid } from "./Grid";
-import { Size } from "./Size";
+import { undef } from "../Func";
+import { Color, color_hex } from "./Color";
+import { Dir, dir_coords, dir_opposite } from "./Dir";
+import { GridMetaData } from "./Grid";
+import { Size, size_pixels } from "./Size";
 
 type LaserObj = { x: number, y: number, dir: Dir, color: Color, size: Size }
+export type Laser = Readonly<LaserObj>
 
-export class Laser implements LaserObj {
-    private _x: number = 0;
-    private _y: number = 0;
-    private _dir: Dir = Dir.none;
-    private _color: Color = Color.black;
-    private _size: Size = Size.medium;
+const defaultLaser: Laser = { x: 0, y: 0, dir: "None", color: "Black", size: "Medium" }
 
-    constructor(spec: { origin: "new", data: LaserObj } | { origin: "edge", edge: number, grid: Grid }) {
-        if (spec.origin == "new") {
-            this.constructNew(spec);
-        } else if (spec.origin == "edge") {
-            this.constructFromEdge(spec);
-        }
+export const laser_copy = (o: Laser, l: Partial<Laser>): Laser => {
+    return {
+        x: undef(o.x, l.x),
+        y: undef(o.y, l.y),
+        dir: undef(o.dir, l.dir),
+        color: undef(o.color, l.color),
+        size: undef(o.size, l.size)
     }
+}
 
-    private constructNew(spec: { data: LaserObj }) {
-        const { x, y, dir, color, size } = spec.data;
-        this.x = x;
-        this.y = y;
-        this.dir = dir;
-        this.color = color;
-        this.size = size;
-    }
+export const laser_new = (l: Partial<Laser>) => laser_copy(defaultLaser, l)
 
-    private constructFromEdge(spec: { edge: number, grid: Grid }) {
-        const { edge, grid } = spec;
-        const { numSpacesX, numSpacesY } = grid;
-        this.color = Color.black;
-        this.size = Size.medium;
-        if (edge <= numSpacesX) {
-            this.x = edge - 1;
-            this.y = 0;
-            this.dir = Dir.down;
-        } else if (edge <= numSpacesX + numSpacesY) {
-            this.x = numSpacesX - 1;
-            this.y = edge - numSpacesX;
-            this.dir = Dir.left;
-        } else if (edge <= numSpacesX * 2 + numSpacesY) {
-            this.x = numSpacesX * 2 + numSpacesY - edge;
-            this.y = numSpacesY - 1;
-            this.dir = Dir.up;
-        } else {
-            this.x = 0;
-            this.y = numSpacesX * 2 + numSpacesY * 2 - edge;
-            this.dir = Dir.right;
-        }
-    }
-    // @ts-ignore
-    draw(spec: {ctx: CanvasRenderingContext2D, grid: Grid }): void {
-        throw new Error("Method not implemented.");
-    }
+export const laser_next = (l: Laser): Laser => {
+    const { x, y, dir } = l
+    const coords = dir_coords(dir)
+    return laser_copy(l, { x: x + coords.x, y: y + coords.y })
+}
 
-    get next() {
-        return new Laser({ origin: "new", data: this.dir.apply(this.obj) });
-    }
+export const laser_opposite = (l: Laser): Laser => laser_copy(l, { dir: dir_opposite(l.dir) })
 
-    get copy() {
-        return new Laser({ origin: "new", data: this.obj });
-    }
+export const laser_draw = (l: Laser, ctx: CanvasRenderingContext2D, meta: GridMetaData) => {
+    const {pixelWidth, pixelHeight} = meta
+    const halfWidth = pixelWidth / 2
+    const halfHeight = pixelHeight / 2
 
-    get obj() {
-        const { x, y, dir, color, size } = this;
-        return { x, y, dir, color, size };
-    }
+    const {color, dir, size} = l
 
-    isOnEdge(grid: Grid) {
-        const { x, y } = this;
-        const { numSpacesX, numSpacesY } = grid;
-        return x == -1 || y == -1 || x == numSpacesX || y == numSpacesY;
+    ctx.strokeStyle = color_hex(color)
+    ctx.lineWidth = size_pixels(size)
+    
+    if (dir === "Down") {
+        ctx.moveTo(halfWidth, pixelHeight)
+    } else if (dir === "Up") {
+        ctx.moveTo(halfWidth, 0)
+    } else if (dir === "Left") {
+        ctx.moveTo(0, halfHeight)
+    } else if (dir === "Right") {
+        ctx.moveTo(pixelWidth, halfHeight)
     }
-
-    public get x(): number {
-        return this._x;
-    }
-    public get y(): number {
-        return this._y;
-    }
-    public get dir(): Dir {
-        return this._dir;
-    }
-    public get color(): Color {
-        return this._color;
-    }
-    public get size(): Size {
-        return this._size;
-    }
-
-    public set x(value: number) {
-        this._x = value;
-    }
-    public set y(value: number) {
-        this._y = value;
-    }
-    public set dir(value: Dir) {
-        this._dir = value;
-    }
-    public set color(value: Color) {
-        this._color = value;
-    }
-    public set size(value: Size) {
-        this._size = value;
-    }
+    
+    ctx.lineTo(halfWidth, halfHeight)
 }

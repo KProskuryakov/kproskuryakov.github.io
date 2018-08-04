@@ -1,106 +1,48 @@
-import { Color } from "./Color"
-import { Dir } from "./Dir"
-import { Laser } from "./Laser"
-import { Grid } from "./Grid"
+import { color_add, color_hex } from "./Color";
+import { dir_clockwise, dir_counterclockwise, dir_horizontal } from "./Dir";
+import { GridMetaData } from "./Grid";
+import { Laser, laser_copy } from "./Laser";
+import { size_larger, size_smaller } from "./Size";
 
+export type Piece = "Forward Slash" | "Back Slash" | "Black Hole" | "Grower" | "Shrinker" | "Red Swatch" | "Green Swatch" | "Blue Swatch"
 
-interface PieceData {
-    name: string
-    apply: (laser: Laser) => void
-    draw: (spec: { ctx: CanvasRenderingContext2D, grid: Grid }) => void
-}
-
-type PieceDataList = {
-    forwardSlash: PieceData
-    backSlash: PieceData
-    blackHole: PieceData
-    grower: PieceData
-    shrinker: PieceData
-    redSwatch: PieceData
-    greenSwatch: PieceData
-    blueSwatch: PieceData
-}
-const pieceData: PieceDataList = {
-    forwardSlash: {
-        name: "Forward Slash",
-        apply(laser) {
-            let { dir } = laser;
-            if (dir == Dir.left) {
-                dir = Dir.down
-            } else if (dir == Dir.down) {
-                dir = Dir.left
-            } else if (dir == Dir.right) {
-                dir = Dir.up
-            } else if (dir = Dir.up) {
-                dir = Dir.right
-            }
-            laser.dir = dir
-        },
-        draw(spec) {
-            const { ctx, grid } = spec
+export const piece_draw = (p: Piece, ctx: CanvasRenderingContext2D, meta: GridMetaData) => {
+    const { pixelWidth, pixelHeight, numSpacesX, numSpacesY } = meta
+    const squareWidth = pixelWidth / (numSpacesX + 2), squareHeight = pixelHeight / (numSpacesY + 2)
+    const chunkX = squareWidth / 5
+    const halfChunkX = chunkX / 2
+    const chunkY = squareHeight / 5
+    const halfChunkY = chunkY / 2
+    const chunkXThird = squareWidth / 3
+    const chunkYThird = squareHeight / 3
+    switch (p) {
+        case "Forward Slash":
             ctx.strokeStyle = "#000000"
             ctx.lineWidth = 4
             ctx.beginPath()
-            ctx.moveTo(0, grid.squareHeight)
-            ctx.lineTo(grid.squareWidth, 0)
+            ctx.moveTo(0, squareHeight)
+            ctx.lineTo(squareWidth, 0)
             ctx.stroke()
-        }
-    },
-    backSlash: {
-        name: "Back Slash",
-        apply(laser) {
-            let { dir } = laser;
-            if (dir == Dir.left) {
-                dir = Dir.up
-            } else if (dir == Dir.down) {
-                dir = Dir.right
-            } else if (dir == Dir.right) {
-                dir = Dir.down
-            } else if (dir = Dir.up) {
-                dir = Dir.left
-            }
-            laser.dir = dir
-        },
-        draw(spec) {
-            const { ctx, grid } = spec
+            break;
+        case "Back Slash":
             ctx.strokeStyle = "#000000"
             ctx.lineWidth = 4
             ctx.beginPath()
             ctx.moveTo(0, 0)
-            ctx.lineTo(grid.squareWidth, grid.squareHeight)
+            ctx.lineTo(squareWidth, squareHeight)
             ctx.stroke()
-        }
-    },
-    blackHole: {
-        name: "Black Hole",
-        apply(laser) {
-            laser.dir = Dir.none
-        },
-        draw(spec) {
-            const { ctx, grid } = spec
+            break;
+        case "Black Hole":
             ctx.strokeStyle = "#000000"
             ctx.lineWidth = 4
             ctx.beginPath()
             ctx.moveTo(0, 0)
-            ctx.lineTo(grid.squareWidth, grid.squareHeight)
-            ctx.moveTo(0, grid.squareHeight)
-            ctx.lineTo(grid.squareWidth, 0)
+            ctx.lineTo(squareWidth, squareHeight)
+            ctx.moveTo(0, squareHeight)
+            ctx.lineTo(squareWidth, 0)
             ctx.stroke()
-        }
-    },
-    grower: {
-        name: "Grower",
-        apply(laser) {
-            laser.size = laser.size.bigger
-        },
-        draw(spec) {
-            const { ctx, grid } = spec
-
-            const chunkX = grid.squareWidth / 5
-            const halfChunkX = chunkX / 2
-            const chunkY = grid.squareHeight / 5
-            const halfChunkY = chunkY / 2
-
+            break;
+        case "Grower":
             ctx.strokeStyle = "#000000"
             ctx.lineWidth = 4
 
@@ -119,20 +61,8 @@ const pieceData: PieceDataList = {
             drawPlus(ctx, chunkX, chunkY, halfChunkX, halfChunkY)
 
             ctx.stroke()
-        }
-    },
-    shrinker: {
-        name: "Shrinker",
-        apply(laser) {
-            laser.size = laser.size.smaller
-        },
-        draw(spec) {
-            const { ctx, grid } = spec
-
-            const chunkX = grid.squareWidth / 5
-            const chunkY = grid.squareHeight / 5
-            const halfChunkY = chunkY / 2
-
+            break;
+        case "Shrinker":
             ctx.strokeStyle = "#000000"
             ctx.lineWidth = 4
 
@@ -151,90 +81,52 @@ const pieceData: PieceDataList = {
             drawMinus(ctx, chunkX, halfChunkY)
 
             ctx.stroke()
-        }
-    },
-    redSwatch: {
-        name: "Red Swatch",
-        apply(laser) {
-            Color.red.addTo(laser)
-        },
-        draw(spec) {
-            const {ctx, grid} = spec
-            ctx.fillStyle = Color.red.hex
-            const chunkX = grid.squareWidth / 3
-            const chunkY = grid.squareHeight / 3
-            ctx.fillRect(chunkX, chunkY, chunkX, chunkY)
-        }
-    },
-    greenSwatch: {
-        name: "Green Swatch",
-        apply(laser) {
-            Color.green.addTo(laser)
-        },
-        draw(spec) {
-            const {ctx, grid} = spec
-            ctx.fillStyle = Color.green.hex
-            const chunkX = grid.squareWidth / 3
-            const chunkY = grid.squareHeight / 3
-            ctx.fillRect(chunkX, chunkY, chunkX, chunkY)
-        }
-    },
-    blueSwatch: {
-        name: "Blue Swatch",
-        apply(laser) {
-            Color.blue.addTo(laser)
-        },
-        draw(spec) {
-            const {ctx, grid} = spec
-            ctx.fillStyle = Color.blue.hex
-            const chunkX = grid.squareWidth / 3
-            const chunkY = grid.squareHeight / 3
-            ctx.fillRect(chunkX, chunkY, chunkX, chunkY)
-        }
-    }
-};
-
-export class Piece {
-    private _x: number = 0
-    private _y: number = 0
-    private _pieceData: PieceData
-    private _placed: Boolean = false
-
-    public constructor(spec: { pieceDataName: keyof PieceDataList }) {
-        const { pieceDataName } = spec;
-        this._pieceData = pieceData[pieceDataName]
-    }
-
-    public apply(laser: Laser) {
-        this._pieceData.apply(laser)
-    }
-
-    public draw(spec: { ctx: CanvasRenderingContext2D, grid: Grid }) {
-        this._pieceData.draw(spec)
-    }
-
-    public get x() {
-        return this._x
-    }
-    public get y() {
-        return this._y
-    }
-    public get name() {
-        return this._pieceData.name
-    }
-    public get placed() {
-        return this._placed
+            break;
+        case "Red Swatch":
+            ctx.fillStyle = color_hex("Red")
+            ctx.fillRect(chunkXThird, chunkYThird, chunkXThird, chunkYThird)
+            break;
+        case "Green Swatch":
+            ctx.fillStyle = color_hex("Green")
+            ctx.fillRect(chunkXThird, chunkYThird, chunkXThird, chunkYThird)
+            break;
+        case "Blue Swatch":
+            ctx.fillStyle = color_hex("Blue")
+            ctx.fillRect(chunkXThird, chunkYThird, chunkXThird, chunkYThird)
+            break;
     }
 }
 
-function drawPlus(ctx: CanvasRenderingContext2D, chunkX: number, chunkY: number, halfChunkX: number, halfChunkY: number) {
+export const piece_apply = (p: Piece, l: Laser): Laser => {
+    const { dir, color, size } = l
+    switch (p) {
+        case "Forward Slash":
+            return laser_copy(l, { dir: dir_horizontal(dir) ? dir_clockwise(dir) : dir_counterclockwise(dir) })
+        case "Back Slash":
+            return laser_copy(l, { dir: dir_horizontal(dir) ? dir_counterclockwise(dir) : dir_clockwise(dir) })
+        case "Black Hole":
+            return laser_copy(l, { dir: "None" })
+        case "Grower":
+            return laser_copy(l, { size: size_larger(size) })
+        case "Shrinker":
+            return laser_copy(l, { size: size_smaller(size) })
+        case "Red Swatch":
+            return laser_copy(l, { color: color_add(color, "Red") })
+        case "Green Swatch":
+            return laser_copy(l, { color: color_add(color, "Green") })
+        case "Blue Swatch":
+            return laser_copy(l, { color: color_add(color, "Blue") })
+    }
+}
+
+const drawPlus = (ctx: CanvasRenderingContext2D, chunkX: number, chunkY: number, halfChunkX: number, halfChunkY: number) => {
     ctx.moveTo(halfChunkX, 0)
     ctx.lineTo(halfChunkX, chunkY)
     ctx.moveTo(0, halfChunkY)
     ctx.lineTo(chunkX, halfChunkY)
 }
 
-function drawMinus(ctx: CanvasRenderingContext2D, chunkX: number, halfChunkY: number) {
+const drawMinus = (ctx: CanvasRenderingContext2D, chunkX: number, halfChunkY: number) => {
     ctx.moveTo(0, halfChunkY)
     ctx.lineTo(chunkX, halfChunkY)
 }
