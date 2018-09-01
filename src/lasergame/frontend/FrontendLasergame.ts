@@ -6,7 +6,9 @@ import LaserGridComponent from "./components/LaserGridComponent";
 import PieceComponent from "./components/PieceComponent";
 import ToolbarComponent from "./components/ToolbarComponent";
 import { pathToString } from "./FrontendPath";
-import { canvas, ctx, pathsPre, victoryP } from "./HTMLElements";
+import { canvas, ctx, pathsPre, victoryP, seedLevelButton, seedInput, edgesInput, dailyLevelButton } from "./HTMLElements";
+import { generateLevel } from "../LevelGenerator";
+import seedrandom = require("seedrandom");
 
 export const toolbar = new ToolbarComponent("./toolbar.png", { x: 0, y: 7 }, 8, 1, draw);
 export const lasergridComponent = new LaserGridComponent("./lasergrid.png", { x: 0, y: 0 }, 7, 7, draw);
@@ -14,8 +16,7 @@ export const lasergridComponent = new LaserGridComponent("./lasergrid.png", { x:
 export const pieceComponents: PieceComponent[] = [];
 
 let currentLevel: Path[];
-export const availablePieces: GridPiece[] = [];
-export const pieceIndexMap: Map<GridPiece, number> = new Map();
+export let availablePieces: GridPiece[] = [];
 export let edgeLevelData: Array<{ edge: number, solved: boolean }>;
 let levelType: LevelType = LevelType.Custom;
 // let difficulty = "medium";
@@ -30,28 +31,22 @@ function init() {
     onClick(e);
   });
 
-  pieceComponents[PieceID.FORWARD_SLASH] = new PieceComponent(PieceID.FORWARD_SLASH,
-    "./pieces/mirror_forwardslash.png", draw);
-  pieceComponents[PieceID.BACK_SLASH] = new PieceComponent(PieceID.BACK_SLASH,
-    "./pieces/mirror_backslash.png", draw);
-  pieceComponents[PieceID.BLACK_HOLE] = new PieceComponent(PieceID.BLACK_HOLE,
-    "./pieces/mirror_blackhole.png", draw);
-  pieceComponents[PieceID.HORI_SPLIT] = new PieceComponent(PieceID.HORI_SPLIT,
-    "./pieces/mirror_sidesplit.png", draw);
-  pieceComponents[PieceID.VERT_SPLIT] = new PieceComponent(PieceID.VERT_SPLIT,
-    "./pieces/mirror_upsplit.png", draw);
+  seedLevelButton.addEventListener("click", seedLevel);
+  dailyLevelButton.addEventListener("click", dailyLevel);
 
-  pieceComponents[PieceID.BLUE] = new PieceComponent(PieceID.BLUE,
-    "./pieces/swatch_blue.png", draw);
-  pieceComponents[PieceID.RED] = new PieceComponent(PieceID.RED,
-    "./pieces/swatch_red.png", draw);
-  pieceComponents[PieceID.GREEN] = new PieceComponent(PieceID.GREEN,
-    "./pieces/swatch_green.png", draw);
+  pieceComponents[PieceID.FORWARD_SLASH] = new PieceComponent("./pieces/mirror_forwardslash.png", draw);
+  pieceComponents[PieceID.BACK_SLASH] = new PieceComponent("./pieces/mirror_backslash.png", draw);
+  pieceComponents[PieceID.BLACK_HOLE] = new PieceComponent("./pieces/mirror_blackhole.png", draw);
+  pieceComponents[PieceID.HORI_SPLIT] = new PieceComponent("./pieces/mirror_sidesplit.png", draw);
+  pieceComponents[PieceID.VERT_SPLIT] = new PieceComponent("./pieces/mirror_upsplit.png", draw);
+
+  pieceComponents[PieceID.BLUE] = new PieceComponent("./pieces/swatch_blue.png", draw);
+  pieceComponents[PieceID.RED] = new PieceComponent("./pieces/swatch_red.png", draw);
+  pieceComponents[PieceID.GREEN] = new PieceComponent("./pieces/swatch_green.png", draw);
 
   for (let i = 0; i < 8; i++) {
-    const piece: GridPiece = {pieceID: i, tile: {x: -1, y: -1}};
+    const piece: GridPiece = { pieceID: i, tile: { x: -1, y: -1 }, index: i };
     availablePieces[i] = piece;
-    pieceIndexMap.set(piece, i);
   }
 
   calculateAllEndings(lasergridComponent.lasergrid);
@@ -74,13 +69,10 @@ function onClick(event: MouseEvent) {
   toolbar.processMouseClick(loc.x, loc.y, event.button);
   printPaths();
   if (currentLevel && checkVictory()) {
-    if (levelType === LevelType.Random) {
-      victoryP.innerHTML = `Incredible! You won!">`
-        + `Click here to generate a new random puzzle!</a>`;
+    if (levelType === LevelType.Seed) {
+      victoryP.textContent = "You beat the seed level!";
     } else if (levelType === LevelType.Daily) {
       victoryP.textContent = "Wow! You beat the daily level!";
-    } else if (levelType === LevelType.Custom) {
-      victoryP.textContent = "Wow! You beat the custom level!";
     }
     victoryP.hidden = false;
   }
@@ -170,25 +162,43 @@ function windowToCanvas(x: number, y: number) {
   };
 }
 
-// export function getLevel(seed: string, difficultyString: string) {
-//   difficulty = difficultyString;
-//   window.fetch(`/api/lasergame/seed/${difficultyString}/${seed}`, {
-//     credentials: "same-origin",
-//     method: "GET",
-//   }).then((response) => {
-//     response.json().then((randomLevel) => {
-//       levelType = LevelType.Random;
-//       const levelData = randomLevel.levelData;
-//       const newSeed = randomLevel.seed;
-//       currentLevel = [];
-//       for (const data of levelData.paths) {
-//         currentLevel.push(data);
-//       }
-//       availablePieces = levelData.availablePieces;
-//       printPaths();
-//       draw();
-//     });
-//   });
-// }
+function setNewLevel(seed: string, edges: number | undefined) {
+  lasergridComponent.clear();
+  const newLevel = generateLevel(seed, edges)
+  currentLevel = [];
+  newLevel.paths.forEach(p => currentLevel.push(p));
+  availablePieces = newLevel.availablePieces;
+  printPaths();
+  lasergridComponent.calculateDrawPathWrapper();
+  draw();
+}
+
+function seedLevel() {
+  let seed = seedInput.value;
+  let edges: number | undefined = parseInt(edgesInput.value);
+
+  if (seed === "") {
+    seed = Date.now().toString();
+  }
+
+  if (isNaN(edges) || edges < 1 || edges > 20) {
+    edges = undefined;
+  }
+
+  levelType = LevelType.Seed;
+  victoryP.textContent = `Currently playing seed: ${seed}`
+
+  setNewLevel(seed, edges);
+}
+
+function dailyLevel() {
+  const seed = new Date().toDateString();
+  const rng = seedrandom(seed);
+  const edges = rng() * 10 + 5;
+
+  levelType = LevelType.Daily;
+  victoryP.textContent = `Currently playing daily level: ${seed}`
+  setNewLevel(seed, edges);
+}
 
 init();

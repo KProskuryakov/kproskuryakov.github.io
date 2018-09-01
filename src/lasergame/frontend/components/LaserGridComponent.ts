@@ -2,10 +2,9 @@ import { colorToRGBString } from "../../Color";
 import Direction from "../../Direction";
 import LaserGrid, { edgeNumberToLaser, getPieceFromGrid, makeDefaultGrid, removePieceFromGrid, setPieceInGrid, tileToEdgeNumber } from "../../LaserGrid";
 import LaserSegment, { copyLaserSegment, getOppositeLaserSegment } from "../../LaserSegment";
-import PathsList from "../../PathsList";
 import { applyPieceToLaser } from "../../PieceID";
 import Tile, { addTiles, directionToTile, nextTile, subTiles, tileWithinAreaInclusive } from "../../Tile";
-import { availablePieces, edgeLevelData, pieceComponents, printPaths, toolbar, pieceIndexMap } from "../FrontendLasergame";
+import { availablePieces, edgeLevelData, pieceComponents, printPaths, toolbar } from "../FrontendLasergame";
 import { tileToPixels, TILE_FULL, TILE_HALF } from "../FrontendTile";
 import CanvasComponent from "./CanvasComponent";
 
@@ -15,7 +14,6 @@ export default class LaserGridComponent extends CanvasComponent {
   public lasergrid: LaserGrid;
   public selectedEdge: number;
   public drawPath: LaserSegment[];
-  public importedPathsList: PathsList;
 
   constructor(
     src: string, tile: Tile, widthInTiles: number, heightInTiles: number, draw: () => void,
@@ -26,7 +24,6 @@ export default class LaserGridComponent extends CanvasComponent {
 
     this.selectedEdge = 1;
     this.drawPath = [];
-    this.importedPathsList = [];
   }
 
   public draw(ctx: CanvasRenderingContext2D) {
@@ -97,6 +94,12 @@ export default class LaserGridComponent extends CanvasComponent {
     }
   }
 
+  public clear() {
+    this.lasergrid = makeDefaultGrid();
+    this.selectedEdge = 1;
+    this.drawPath = [];
+  }
+
   public processMouseClick(x: number, y: number, button: number) {
     const relativeTile = super.processMouseClick(x, y, button);
     console.log(button);
@@ -111,7 +114,7 @@ export default class LaserGridComponent extends CanvasComponent {
       if (piece) {
         const removedPiece = removePieceFromGrid(this.lasergrid, piece);
         if (button === 0) { // left mouse button
-          toolbar.selectedPiece = pieceIndexMap.get(removedPiece)!;
+          toolbar.selectedPiece = removedPiece.index;
         }
       } else {
         setPieceInGrid(this.lasergrid, availablePieces[toolbar.selectedPiece], loc);

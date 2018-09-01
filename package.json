@@ -19,7 +19,9 @@
   },
   "homepage": "https://github.com/KProskuryakov/kproskuryakov.github.io#readme",
   "devDependencies": {
+    "@types/seedrandom": "^2.4.27",
     "immutable": "^3.8.2",
+    "seedrandom": "^2.4.4",
     "ts-loader": "^4.4.1",
     "tslint": "^5.11.0",
     "typescript": "^3.0.1",

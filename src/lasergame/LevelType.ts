@@ -1,6 +1,6 @@
 enum LevelType {
   Daily,
-  Random,
+  Seed,
   Custom,
 }
 

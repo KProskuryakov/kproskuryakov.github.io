@@ -9,6 +9,7 @@ import Tile, { nextTile, tileWithinAreaExclusive } from "./Tile";
 export interface GridPiece {
   readonly pieceID: PieceID;
   tile: Tile;
+  readonly index: number;
 }
 
 export default interface LaserGrid {
@@ -26,21 +27,6 @@ export function makeDefaultGrid(): LaserGrid {
   const newGrid = {
     paths: [] as Path[],
     grid: grid as GridPiece[][],
-    length: 5, width: 5,
-  };
-  calculateAllEndings(newGrid);
-  return newGrid;
-}
-
-export function makeCustomGrid(availablePieces: GridPiece[]): LaserGrid {
-  const grid = [];
-  for (let i = 0; i < 5; i++) {
-    grid[i] = [];
-  }
-  const newGrid = {
-    paths: [] as Path[],
-    grid: grid as GridPiece[][],
-    availablePieces,
     length: 5, width: 5,
   };
   calculateAllEndings(newGrid);

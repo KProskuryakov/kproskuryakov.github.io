@@ -4,12 +4,10 @@ import Tile from "../../Tile";
 import { tileToPixels } from "../FrontendTile";
 
 export default class PieceComponent {
-  public piece: GridPiece;
   public isPlaced: boolean;
   private img: HTMLImageElement;
 
-  constructor(pieceID: PieceID, src: string, draw: () => void) {
-    this.piece = { pieceID, tile: { x: -1, y: -1 } };
+  constructor(src: string, draw: () => void) {
     this.isPlaced = false;
     this.img = new Image();
     this.img.onload = () => { draw(); };
