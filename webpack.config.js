@@ -2,8 +2,7 @@ const path = require('path');
 
 module.exports = {
 	entry: {
-		lasergame: './src/lasergame/Game.ts',
-		upnumbers: './src/upnumbers/upnumbers.ts'
+		lasergame: './src/lasergame/frontend/FrontendLasergame.ts'
 	},
 	devtool: 'inline-source-map',
 	module: {
