@@ -6,8 +6,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Kostyapro Lasergame</title>
 	<link rel="stylesheet" type="text/css" href="../index.css">
+	<link rel="stylesheet" type="text/css" href="./lasergame.css">
 	<script src="../footer.js"></script>
-	<script src="bundle.js"></script>
 </head>
 
 <body>
@@ -18,15 +18,20 @@
 			<a href="../index.html">Home</a>
 		</div>
 		<div>
-			<p>Work in progress. Not even close to ready yet.</p>
+			<p id="victory-p">Work in progress. Not even close to ready yet.</p>
+		</div>
+		<div class="lasergame-canvas-div">
+			<canvas id="laser-game-canvas" height="400px" width="400px"></canvas>
 		</div>
 		<div>
-			<canvas id="lasergame-canvas" height="350px - 2em" width="350px - 2em"></canvas>
+			<pre id="paths-pre">This is where the paths are supposed to be.</pre>
 		</div>
 		<div>
 			<p id="footer">I swear you won't get radiation poisoning.</p>
 		</div>
 	</div>
 </body>
+
+<script src="bundle.js"></script>
 
 </html>

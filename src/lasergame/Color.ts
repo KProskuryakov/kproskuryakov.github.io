@@ -1,13 +1,26 @@
-export type Color = "Black" | "Blue" | "Green" | "Cyan" | "Red" | "Magenta" | "Yellow" | "White"
+enum Color {
+  BLACK,
+  BLUE,
+  GREEN,
+  CYAN,
+  RED,
+  MAGENTA,
+  YELLOW,
+  WHITE,
+}
+export default Color;
 
-enum ColorIndex {
-    Black, Blue, Green, Cyan, Red, Magenta, Yellow, White
+export function addColors(a: Color, b: Color) {
+  return a | b;
 }
 
-const ColorName: Color[] = ["Black", "Blue", "Green", "Cyan", "Red", "Magenta", "Yellow", "White"]
+export function colorToRGBString(color: Color) {
+  const r = 4 === (4 & color) ? 255 : 0;
+  const g = 2 === (2 & color) ? 255 : 0;
+  const b = 1 === (1 & color) ? 255 : 0;
+  return `rgb(${r},${g},${b})`;
+}
 
-export const color_add = (c1: Color, c2: Color) => ColorName[ColorIndex[c1] & ColorIndex[c2]]
-export const color_subtract = (c1: Color, c2: Color) => ColorName[ColorIndex[c1] & ~ColorIndex[c2]]
-export const color_negate = (c: Color) => ColorName[~ColorIndex[c] & ColorIndex["White"]]
-export const color_hex = (c: Color) => `#${(ColorIndex[c] & 4) == 4 ? "ff" : "00"}` +
-    `${(ColorIndex[c] & 2) == 2 ? "ff" : "00"}${(ColorIndex[c] & 1) == 1 ? "ff" : "00"}`
+export function colorToName(color: Color) {
+  return Color[color];
+}
