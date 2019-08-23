@@ -1,0 +1,3 @@
+{
+    "glsllint.glslangValidatorPath": "./glslvaldator/bin/glslangValidator.exe"
+}
