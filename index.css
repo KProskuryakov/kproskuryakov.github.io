@@ -1,17 +1,16 @@
 body {
-    background: #524747;
-    background: linear-gradient(to top left, #000000, #690000) fixed;
+    background: #222222;
     color: white;
 }
 
 a {
-    color: #ff6060;
+    color: #f8aeae;
 }
 
 .container {
     display: grid;
     grid-template-columns: repeat(auto-fit, 1fr);
-    grid-gap: 20px;
+    grid-gap: 40px;
     margin: 5%;
     grid-auto-flow: dense;
 }
@@ -23,8 +22,12 @@ a {
 }
 
 .container > div {
-    background: #ffffff20 ;
+    /* background: #ffffff20 ; */
     padding: 1em;
+    box-shadow: 
+         6px  6px 6px 4px rgba(0, 0, 0, .8),
+        -6px -6px 6px 4px rgba(255, 255, 255, 0.03)
+
 }
 
 .container .wide {
