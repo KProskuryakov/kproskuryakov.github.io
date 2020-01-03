@@ -11,7 +11,11 @@ npm install -d
 npm audit fix
 npm update --save
 
-npm run watch
+npm start
 ```
 
-Download the glsl validator thing for the cool glsl lint extensions to work https://github.com/KhronosGroup/glslang/releases/tag/master-tot
+## Jekyll
+Github pages looks like it uses jekyll as part of the build process for the static sites. I'm guessing that if it doesn't find anything that needs jekyll, it doesn't even run it.
+
+This quick guide to install it: https://jekyllrb.com/docs/installation/ubuntu/
+

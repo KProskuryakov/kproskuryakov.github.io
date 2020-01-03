@@ -1,6 +1,7 @@
 body {
     background: #222222;
     color: white;
+    font-family: "Courier New"
 }
 
 a {
@@ -24,10 +25,9 @@ a {
 .container > div {
     /* background: #ffffff20 ; */
     padding: 1em;
-    box-shadow: 
-         6px  6px 6px 4px rgba(0, 0, 0, .8),
-        -6px -6px 6px 4px rgba(255, 255, 255, 0.03)
-
+    border-radius: 6px;
+    box-shadow:  6px  6px 6px 4px rgba(0, 0, 0, .8),
+                -6px -6px 6px 4px rgba(255, 255, 255, 0.03);
 }
 
 .container .wide {
