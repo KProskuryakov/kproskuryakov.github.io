@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>KP</title>
+    <link rel="stylesheet" type="text/css" href="{{ "/assets/styles.css" | relative_url }}">
+    <script src="footer.js"></script>
+</head>
+
+<body>
+    <div class="container">
+
+        {{ content }}
+
+        <div class="wide" id="footer">
+            Copyright &copy; 2018 - {{ 'now' | date: "%Y" }} Kostyantyn Proskuryakov
+        </div>
+    </div>
+</body>
+
+</html>
