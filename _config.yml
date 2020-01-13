@@ -1,0 +1,29 @@
+title: Kostyapro
+description: A blog and project showcase.
+url: https://kostyapro.com
+author: Kostyantyn Proskuryakov
+logo: favicon.png
+
+kramdown:
+  parse_block_html: "true"
+
+plugins:
+  - jekyll-feed
+  - jekyll-avatar
+  - jekyll-gist
+  - jekyll-seo-tag
+  - jekyll-sitemap
+  - rouge
+
+twitter:
+  username: zzcorrode
+  card: summary
+
+exclude:
+  - src
+  - node_modules
+  - package.json
+  - package-lock.json
+  - tsconfig.json
+  - tslint.json
+  - webpack.config.js

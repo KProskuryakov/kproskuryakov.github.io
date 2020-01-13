@@ -1,0 +1,42 @@
+@charset "utf-8";
+
+body {
+    background: #222222;
+    color: white;
+    font-family: "Courier New", sans-serif;
+}
+
+a {
+    color: #f8aeae;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 1fr);
+    grid-gap: 40px;
+    margin: 5%;
+    grid-auto-flow: dense;
+}
+
+@media (min-width: 480px) {
+    .container {
+        grid-template-columns: repeat(auto-fit, minmax(350px, auto));
+    }
+}
+
+.container > div {
+    /* background: #ffffff20 ; */
+    padding: 1em;
+    border-radius: 6px;
+    box-shadow:  6px  6px 6px 4px rgba(0, 0, 0, .8),
+                -6px -6px 6px 4px rgba(255, 255, 255, 0.03);
+}
+
+.container .wide {
+    grid-column-start: 1;
+    grid-column-end: -1;
+}
+
+.container .tall2 {
+    grid-row-end: span 2;
+}

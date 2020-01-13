@@ -50,8 +50,8 @@ gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
 gl.bindVertexArray(null);
 
 async function doRendering() {
-    const shader1 = await getShader("../src/webgl/shaders/v1.glsl", "../src/webgl/shaders/f1.glsl");
-    const shader2 = await getShader("../src/webgl/shaders/v1.glsl", "../src/webgl/shaders/f2.glsl");
+    const shader1 = await getShader("/assets/webgl/shaders/v1.glsl", "/assets/webgl/shaders/f1.glsl");
+    const shader2 = await getShader("/assets/webgl/shaders/v1.glsl", "/assets/webgl/shaders/f2.glsl");
 
     const render = (timestamp: number) => {
         gl.clearColor(0.2, 0.3, 0.3, 1.0);
