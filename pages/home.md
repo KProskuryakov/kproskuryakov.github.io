@@ -45,6 +45,6 @@ Total Post Count: {{ site.posts | size }}
 <div>
 
 ## Webgl
-- [The first one](/webgl/webgl.html)
+- [The first one]({% link pages/webgl.md %})
 
 </div>
