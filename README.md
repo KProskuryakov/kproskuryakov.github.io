@@ -20,8 +20,9 @@ Github pages looks like it uses jekyll as part of the build process for the stat
 This quick guide to install it: https://jekyllrb.com/docs/installation/ubuntu/
 
 ```
-bundler update github-pages
+bundle install
+bundle update
 
 
-bundler exec jekyll serve
+bundle exec jekyll serve
 ```

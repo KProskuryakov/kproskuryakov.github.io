@@ -2,22 +2,40 @@
 <html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>KP</title>
-    <link rel="stylesheet" type="text/css" href="{{ "/assets/styles.css" | relative_url }}">
-    <script src="footer.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ page.title }}</title>
+  <link rel="stylesheet" type="text/css" href="{% link assets/styles.scss %}">
+  {% for extra_style in page.extra_styles %}
+    <link rel=stylesheet" type="text/css" href="{% link {{ extra_style }} %}">
+  {% endfor %}
+  <link rel="shortcut icon" type="image/png" href="{% link favicon.png %}">
+  {% feed_meta %}
 </head>
 
 <body>
-    <div class="container">
-
-        {{ content }}
-
-        <div class="wide" id="footer">
-            Copyright &copy; 2018 - {{ 'now' | date: "%Y" }} Kostyantyn Proskuryakov
-        </div>
+  <div class="container">
+    <div class="wide">
+      <h1>{{ page.title }}</h1>
+      <p>
+        <em>{{ page.excerpt }}</em>
+      </p>
+      <p>
+        <a href="/">Home</a> - <a href="{% link pages/posts.md %}">Posts</a>
+      </p>
     </div>
+    {{ content }}
+    <div class="wide" id="footer">
+      <p>Copyright &copy; 2018 - {{ 'now' | date: "%Y" }} Kostyantyn Proskuryakov</p>
+      <p>
+        {% avatar kproskuryakov size=32 %}
+        <a href="https://github.com/KProskuryakov"><img width=32px height=32px
+            src="{% link assets/GitHub-Mark-Light-32px.png %}" /></a>
+        <a href="https://twitter.com/zzcorrode"><img width=32px height=32px
+            src="{% link assets/Twitter_Social_Icon_Circle_White.png %}" /></a>
+      </p>
+    </div>
+  </div>
 </body>
 
 </html>
