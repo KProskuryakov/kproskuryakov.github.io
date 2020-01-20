@@ -24,6 +24,13 @@ a {
     }
 }
 
+@media (min-width: 960px) {
+    .container {
+        width: min(100%, 840px);
+        margin: 5% auto;
+    }
+}
+
 .container > div {
     padding: 1em;
     border-radius: 6px;
@@ -42,6 +49,7 @@ a {
 
 .container .lasergame-canvas-div {
     padding: 0;
+    position: relative;
 }
 
 input:invalid + span:after {

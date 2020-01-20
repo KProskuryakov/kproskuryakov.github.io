@@ -1,14 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ page.title }}</title>
+  <meta name="description" content="{{ page.excerpt }}">
   <link rel="stylesheet" type="text/css" href="{% link assets/styles.scss %}">
-  {% for extra_style in page.extra_styles %}
-    <link rel=stylesheet" type="text/css" href="{% link {{ extra_style }} %}">
-  {% endfor %}
   <link rel="shortcut icon" type="image/png" href="{% link favicon.png %}">
   {% feed_meta %}
 </head>
@@ -26,14 +24,13 @@
     </div>
     {{ content }}
     <div class="wide" id="footer">
-      <p>Copyright &copy; 2018 - {{ 'now' | date: "%Y" }} Kostyantyn Proskuryakov</p>
       <p>
-        {% avatar kproskuryakov size=32 %}
         <a href="https://github.com/KProskuryakov"><img width=32px height=32px
-            src="{% link assets/GitHub-Mark-Light-32px.png %}" /></a>
+            src="{% link assets/GitHub-Mark-Light-32px.png %}" alt="GitHub Logo"/></a>
         <a href="https://twitter.com/zzcorrode"><img width=32px height=32px
-            src="{% link assets/Twitter_Social_Icon_Circle_White.png %}" /></a>
+            src="{% link assets/Twitter_Social_Icon_Circle_White.png %}" alt="Twitter Logo"/></a>
       </p>
+      <p>Copyright &copy; {{ 'now' | date: "%Y" }} Kostyantyn Proskuryakov</p>
     </div>
   </div>
 </body>
