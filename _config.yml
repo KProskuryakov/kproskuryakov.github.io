@@ -27,3 +27,5 @@ exclude:
   - tsconfig.json
   - tslint.json
   - webpack.config.js
+  - Gemfile
+  - Gemfile.lock

@@ -1,0 +1,17 @@
+{
+  "short_name": "Kostyapro",
+  "name": "Kostyapro's Website",
+  "description": "The offline version of my site is pretty cool.",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "type": "image/png",
+      "sizes": "256x256"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#222222",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#111111"
+}

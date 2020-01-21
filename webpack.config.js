@@ -15,11 +15,6 @@ module.exports = {
         test: /\.tsx?$/,
         use: 'ts-loader',
         exclude: /node_modules/
-      },
-      {
-        test: /\.glsl$/,
-        use: 'raw-loader',
-        exclude: /node_modules/
       }
     ]
   },
