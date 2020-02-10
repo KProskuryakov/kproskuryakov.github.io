@@ -12,6 +12,7 @@ permalink: /
 I like code, books, games and cats.
 
 - [Skills]({% link pages/skills.md %})
+- [Site Readme]({% link README.md %})
 
 </div>
 

@@ -1,28 +1,33 @@
+---
+layout: page
+title: Readme
+excerpt: The readme for the site kostyapro.com
+permalink: /readme
+---
+
 # kproskuryakov.github.io
 An aggregation of interesting sites and random content hosted on kostyapro.com
 
-## Managing the project
-It's been a little while since I've done javascript/typescript related things. Probably should document how to have this stuff updated.
+## Environment Setup
+My primary programming environment is a Windows computer with [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10). I use [Visual Studio Code](https://code.visualstudio.com/) with the [Remote - WSL](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl) plugin.
 
-I ran several things to bring dependencies up to date. Had to install fresh nodejs.
+Follow [this link](https://github.com/nodesource/distributions/blob/master/README.md) to get sorted with having Node.js installed on Ubuntu/WSL.
+
+With Node.js installed, you can then run the following commands in the root of the project directory to set everything up.
 
 ```
 npm install -d
 npm audit fix
 npm update --save
-
-npm start
 ```
 
-## Jekyll
-Github pages looks like it uses jekyll as part of the build process for the static sites. I'm guessing that if it doesn't find anything that needs jekyll, it doesn't even run it.
-
-This quick guide to install it: https://jekyllrb.com/docs/installation/ubuntu/
+Follow [this guide](https://jekyllrb.com/docs/installation/ubuntu/) to install Jekyll on Ubuntu/WSL. Then run the following commands to set up the Jekyll side of this project.
 
 ```
 bundle install
 bundle update
-
-
-bundle exec jekyll serve
 ```
+
+Then simply `npm start` and it should be serving the actual site on a default port.
+
+https://pages.github.com/versions/
