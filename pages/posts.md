@@ -2,7 +2,6 @@
 layout: page
 title: Posts
 excerpt: Ordered by date and questionably categorized.
-permalink: /posts
 ---
 
 <div>

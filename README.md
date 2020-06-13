@@ -1,8 +1,7 @@
 ---
-layout: page
+layout: post
 title: Readme
 excerpt: The readme for the site kostyapro.com
-permalink: /readme
 ---
 
 # kproskuryakov.github.io

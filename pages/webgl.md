@@ -2,7 +2,6 @@
 layout: page
 title: Webgl
 excerpt: Attempts have been made.
-permalink: /webgl
 ---
 
 <div class="wide">

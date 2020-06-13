@@ -2,7 +2,6 @@
 layout: page
 title: Laser Puzzle
 excerpt: A little grid-based puzzle with lasers.
-permalink: /lasergame
 ---
 
 <div class="lasergame-canvas-div">

@@ -1,7 +1,6 @@
 ---
 layout: page
 title: "TEST PAGE"
-permalink: /test-page/
 ---
 
 {::options parse_block_html="true" /}

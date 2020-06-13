@@ -2,7 +2,6 @@
 layout: post
 title: Laser Puzzle Guide
 excerpt: A little grid-based puzzle with lasers.
-permalink: /laser-puzzle-guide
 ---
 
 The goal of the game is to get every laser generated from each of the red edges to go to the correct edge

@@ -2,7 +2,6 @@
 layout: page
 title: Skills
 excerpt: Oftentimes I like to learn about programming languages simply because I'm interested in what they bring to the table.
-permalink: /skills
 ---
 
 <div>
