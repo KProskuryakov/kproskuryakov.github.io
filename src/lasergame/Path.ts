@@ -1,4 +1,4 @@
-import Ending, {endingsEqual} from "./Ending";
+import Ending, { endingsEqual } from "./Ending";
 
 export default interface Path {
   start: number;

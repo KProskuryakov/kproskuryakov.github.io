@@ -1,5 +1,5 @@
 import Path from "../Path";
-import {endingToString} from "./FrontendEnding";
+import { endingToString } from "./FrontendEnding";
 
 export function pathToString(path: Path) {
   return startToString(path) + endingListToString(path);

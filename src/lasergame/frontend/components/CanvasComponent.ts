@@ -1,4 +1,4 @@
-import Tile, {subTiles, tileWithinAreaExclusive} from "../../Tile";
+import Tile, { subTiles, tileWithinAreaExclusive } from "../../Tile";
 import { tileFromPixels, tileToPixels } from "../FrontendTile";
 
 /**
@@ -13,7 +13,7 @@ export default abstract class CanvasComponent {
   private img: HTMLImageElement;
 
   constructor(src: string, tile: Tile, widthInTiles: number, heightInTiles: number, draw: () => void,
-              offsetX = 0, offsetY = 0) {
+    offsetX = 0, offsetY = 0) {
     this.img = new Image();
     this.img.onload = () => { draw(); };
     this.img.src = src;
@@ -37,7 +37,7 @@ export default abstract class CanvasComponent {
    */
   public processMouseClick(x: number, y: number, _button: number) {
     const relativeTile = subTiles(tileFromPixels(x, y), this.tile);
-    if (tileWithinAreaExclusive(relativeTile, {x: -1, y: -1}, {x: this.widthInTiles, y: this.heightInTiles})) {
+    if (tileWithinAreaExclusive(relativeTile, { x: -1, y: -1 }, { x: this.widthInTiles, y: this.heightInTiles })) {
       return relativeTile;
     }
     return null;

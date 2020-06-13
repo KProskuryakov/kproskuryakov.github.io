@@ -2,6 +2,7 @@ import Tile, { addTiles, tileNotNegative } from "../../Tile";
 import { availablePieces, pieceComponents } from "../FrontendLasergame";
 import { TILE_FULL, tileToPixels } from "../FrontendTile";
 import CanvasComponent from "./CanvasComponent";
+import PieceComponent from "./PieceComponent";
 
 /**
  * The toolbar to select the pieces to put in the grid
@@ -20,7 +21,7 @@ export default class ToolbarComponent extends CanvasComponent {
    */
   constructor(
     src: string, tile: Tile, widthInTiles: number, heightInTiles: number,
-    draw: () => void, offsetX = 0, offsetY = 0) {
+    draw: () => void, offsetX: number = 0, offsetY: number = 0) {
     super(src, tile, widthInTiles, heightInTiles, draw, offsetX, offsetY);
     this.selectedPiece = 0;
   }
@@ -33,20 +34,20 @@ export default class ToolbarComponent extends CanvasComponent {
 
     // draw pieces in each box
     for (let i = 0; i < availablePieces.length; i++) {
-      pieceComponents[availablePieces[i].pieceID].drawAt(addTiles(this.tile, {x: i, y: 0}), ctx);
+      pieceComponents[availablePieces[i].pieceID].drawAt(addTiles(this.tile, { x: i, y: 0 }), ctx);
     }
 
     // draw the green and red highlights
     ctx.fillStyle = "green";
     ctx.globalAlpha = 0.2;
-    let loc = tileToPixels(addTiles(this.tile, {x: this.selectedPiece, y: 0}));
+    let loc = tileToPixels(addTiles(this.tile, { x: this.selectedPiece, y: 0 }));
     ctx.fillRect(loc.px, loc.py, TILE_FULL, TILE_FULL);
 
     ctx.fillStyle = "red";
     for (let i = 0; i < availablePieces.length; i++) {
       const piece = availablePieces[i];
       if (i !== this.selectedPiece && tileNotNegative(piece.tile)) {
-        loc = tileToPixels(addTiles(this.tile, {x: i, y: 0}));
+        loc = tileToPixels(addTiles(this.tile, { x: i, y: 0 }));
         ctx.fillRect(loc.px, loc.py, TILE_FULL, TILE_FULL);
       }
     }
@@ -68,9 +69,9 @@ export default class ToolbarComponent extends CanvasComponent {
 
   /**
    * Fetches the selected piece object.
-   * @returns {Piece}
+   * @returns {PieceComponent}
    */
-  public getSelectedPieceComponent() {
+  public getSelectedPieceComponent(): PieceComponent {
     return pieceComponents[this.selectedPiece];
   }
 }

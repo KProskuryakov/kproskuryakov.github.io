@@ -26,8 +26,8 @@ export function nextTile(tile: Tile, dir: Direction) {
 
 export function addTiles(...tiles: Tile[]): Tile {
   return tiles.reduce((p, v, _) => {
-    return {x: p.x + v.x, y: p.y + v.y};
-  }, {x: 0, y: 0} );
+    return { x: p.x + v.x, y: p.y + v.y };
+  }, { x: 0, y: 0 });
 }
 
 export function subTiles(a: Tile, b: Tile): Tile {
@@ -43,7 +43,7 @@ export function tileNotNegative(tile: Tile) {
 }
 
 export function tileCompare(a: Tile, b: Tile, compare: (a: number, b: number) => boolean) {
-  return compare(a.x, b.x) && compare(a.y , b.y);
+  return compare(a.x, b.x) && compare(a.y, b.y);
 }
 
 export function tileWithinAreaInclusive(tile: Tile, min: Tile, max: Tile) {
