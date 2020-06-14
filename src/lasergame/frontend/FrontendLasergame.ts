@@ -10,8 +10,8 @@ import { canvas, ctx, pathsPre, victoryP, seedLevelButton, seedInput, edgesInput
 import { generateLevel } from "../LevelGenerator";
 import seedrandom = require("seedrandom");
 
-export const toolbar = new ToolbarComponent("assets/lasergame/toolbar.png", { x: 0, y: 7 }, 8, 1, draw);
-export const lasergridComponent = new LaserGridComponent("assets/lasergame/lasergrid.png", { x: 0, y: 0 }, 7, 7, draw);
+export const toolbar = new ToolbarComponent("/assets/lasergame/toolbar.png", { x: 0, y: 7 }, 8, 1, draw);
+export const lasergridComponent = new LaserGridComponent("/assets/lasergame/lasergrid.png", { x: 0, y: 0 }, 7, 7, draw);
 
 export const pieceComponents: PieceComponent[] = [];
 
@@ -34,15 +34,15 @@ function init() {
   seedLevelButton.addEventListener("click", seedLevel);
   dailyLevelButton.addEventListener("click", dailyLevel);
 
-  pieceComponents[PieceID.FORWARD_SLASH] = new PieceComponent("assets/lasergame/pieces/mirror_forwardslash.png", draw);
-  pieceComponents[PieceID.BACK_SLASH] = new PieceComponent("assets/lasergame/pieces/mirror_backslash.png", draw);
-  pieceComponents[PieceID.BLACK_HOLE] = new PieceComponent("assets/lasergame/pieces/mirror_blackhole.png", draw);
-  pieceComponents[PieceID.HORI_SPLIT] = new PieceComponent("assets/lasergame/pieces/mirror_sidesplit.png", draw);
-  pieceComponents[PieceID.VERT_SPLIT] = new PieceComponent("assets/lasergame/pieces/mirror_upsplit.png", draw);
+  pieceComponents[PieceID.FORWARD_SLASH] = new PieceComponent("/assets/lasergame/pieces/mirror_forwardslash.png", draw);
+  pieceComponents[PieceID.BACK_SLASH] = new PieceComponent("/assets/lasergame/pieces/mirror_backslash.png", draw);
+  pieceComponents[PieceID.BLACK_HOLE] = new PieceComponent("/assets/lasergame/pieces/mirror_blackhole.png", draw);
+  pieceComponents[PieceID.HORI_SPLIT] = new PieceComponent("/assets/lasergame/pieces/mirror_sidesplit.png", draw);
+  pieceComponents[PieceID.VERT_SPLIT] = new PieceComponent("/assets/lasergame/pieces/mirror_upsplit.png", draw);
 
-  pieceComponents[PieceID.BLUE] = new PieceComponent("assets/lasergame/pieces/swatch_blue.png", draw);
-  pieceComponents[PieceID.RED] = new PieceComponent("assets/lasergame/pieces/swatch_red.png", draw);
-  pieceComponents[PieceID.GREEN] = new PieceComponent("assets/lasergame/pieces/swatch_green.png", draw);
+  pieceComponents[PieceID.BLUE] = new PieceComponent("/assets/lasergame/pieces/swatch_blue.png", draw);
+  pieceComponents[PieceID.RED] = new PieceComponent("/assets/lasergame/pieces/swatch_red.png", draw);
+  pieceComponents[PieceID.GREEN] = new PieceComponent("/assets/lasergame/pieces/swatch_green.png", draw);
 
   for (let i = 0; i < 8; i++) {
     const piece: GridPiece = { pieceID: i, tile: { x: -1, y: -1 }, index: i };
