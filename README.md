@@ -16,7 +16,6 @@ With Node.js installed, you can then run the following commands in the root of t
 
 ```
 npm install -d
-npm audit fix
 npm update --save
 ```
 
