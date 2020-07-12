@@ -3,7 +3,8 @@ const path = require('path');
 module.exports = {
   entry: {
     lasergame: './src/lasergame/frontend/FrontendLasergame.ts',
-    webgl: './src/webgl/WebglEntry.ts'
+    webgl: './src/webgl/WebglEntry.ts',
+    tsiege: './src/tsiege/main.ts'
   },
   devtool: 'inline-source-map',
   devServer: {

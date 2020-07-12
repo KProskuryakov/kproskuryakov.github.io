@@ -39,6 +39,7 @@ Total Post Count: {{ site.posts | size }}
 
 ## Games
 - [Laser Puzzle]({% link pages/lasergame.md %})
+- [TSiege (In Progress)]({% link pages/tsiege.md %})
 
 </div>
 
