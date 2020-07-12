@@ -13,7 +13,6 @@ I like code, books, games and cats.
 
 - [Technical Skills]({% link pages/skills.md %})
 - [Site Readme]({% link README.md %})
-- [Advent of Code Solutions]({% link pages/adventofcode/aoc.md %})
 
 </div>
 
