@@ -1,58 +1,75 @@
+import { Unit, updateUnit, inBounds } from "./unit";
+
 window.addEventListener("load", () => {
     init();
 });
-
-interface Unit {
-    x: number;
-    y: number;
-    movepoint: { x: number, y: number } | undefined;
-    speed: number;
-}
 
 function init() {
     const canvas = <HTMLCanvasElement>document.getElementById("tsiege-canvas");
     const ctx = canvas.getContext("2d")!;
 
-    const player: Unit = { x: 50, y: 50, movepoint: undefined, speed: 300 };
+    const units: Unit[] = [
+        { x: 50, y: 50, w: 20, h: 20, movepoint: undefined, speed: 300 },
+        { x: 400, y: 400, w: 20, h: 20, movepoint: undefined, speed: 300 },
+        { x: 500, y: 100, w: 20, h: 20, movepoint: undefined, speed: 300 }
+    ];
+
+    let selected: Unit | undefined = undefined;
+
+    canvas.oncontextmenu = (e) => e.preventDefault();
     canvas.addEventListener("mouseup", (e) => {
-        player.movepoint = { x: e.offsetX, y: e.offsetY }
+        if (e.button == 0) {
+            units.forEach(unit => {
+                if (inBounds(unit, e.offsetX, e.offsetY)) {
+                    selected = unit;
+                }
+            });
+        } else if (e.button == 2) {
+            if (selected) {
+                selected.movepoint = { x: e.offsetX, y: e.offsetY };
+            }
+        }
     });
+
 
     let fps = 0;
     let oldtime = 0;
     function update(time: number) {
         const dt = time - oldtime;
         oldtime = time;
-        if (player.movepoint) {
-            const angle = Math.atan2(player.movepoint.y - player.y, player.movepoint.x - player.x);
-            player.x = player.x + Math.cos(angle) * player.speed * dt / 1000;
-            player.y = player.y + Math.sin(angle) * player.speed * dt / 1000;
 
-            if (Math.abs(player.x - player.movepoint.x) < 5 && Math.abs(player.y - player.movepoint.y) < 5) {
-                player.movepoint = undefined;
-            }
-        }
+        units.forEach(unit => {
+            updateUnit(unit, dt);
+        });
+
         fps = 1000 / dt;
-        draw(ctx, canvas, player, fps);
+        draw();
         requestAnimationFrame(update);
     }
-    requestAnimationFrame(update);
-}
 
-function draw(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, player: Unit, fps: number) {
-    const { width, height } = canvas;
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, width, height);
+    function draw() {
+        const { width, height } = canvas;
+        ctx.fillStyle = "black";
+        ctx.fillRect(0, 0, width, height);
 
-    ctx.fillStyle = "red";
-    ctx.fillRect(player.x, player.y, 20, 20);
+        units.forEach(unit => {
+            ctx.fillStyle = "red";
+            ctx.fillRect(unit.x - unit.w / 2, unit.y - unit.h / 2, unit.w, unit.h);
+            if (unit.movepoint) {
+                ctx.strokeStyle = "green";
+                ctx.strokeRect(unit.movepoint.x - 5, unit.movepoint.y - 5, 10, 10);
+            }
+        });
 
-    if (player.movepoint) {
-        ctx.strokeStyle = "green";
-        ctx.strokeRect(player.movepoint.x, player.movepoint.y, 10, 10);
+        if (selected) {
+            ctx.strokeStyle = "white";
+            ctx.strokeRect(selected.x - selected.w / 2, selected.y - selected.h / 2, selected.w, selected.h);
+        }
+
+        ctx.fillStyle = "white"
+        ctx.font = "1.2em monospace"
+        ctx.fillText(`fps: ${Math.round(fps)}`, 7, 20);
     }
 
-    ctx.fillStyle = "white"
-    ctx.font = "1.2em monospace"
-    ctx.fillText(`fps: ${Math.round(fps)}`, 7, 20);
+    requestAnimationFrame(update);
 }
