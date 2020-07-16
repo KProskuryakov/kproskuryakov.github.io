@@ -1,66 +1,50 @@
-import { Unit, updateUnit, inBounds } from "./unit";
+import { Building, newBuilding } from "./building";
+import Fps from "./fps";
+import { Selector } from "./selector";
+import { newUnit, Unit, updateUnit } from "./unit";
 
 window.addEventListener("load", () => {
   init();
 });
 
 function init() {
-  const canvas = <HTMLCanvasElement>document.getElementById("tsiege-canvas");
-  const ctx = canvas.getContext("2d")!;
+  const canvas = document.getElementById("tsiege-canvas") as HTMLCanvasElement;
+  const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 
   const units: Unit[] = [
-    { x: 50, y: 50, w: 20, h: 20, movepoint: undefined, speed: 300 },
-    { x: 400, y: 400, w: 20, h: 20, movepoint: undefined, speed: 300 },
-    { x: 500, y: 100, w: 20, h: 20, movepoint: undefined, speed: 300 }
+    newUnit({x: 50, y: 50}),
+    newUnit({x: 400, y: 400}),
+    newUnit({x: 500, y: 100}),
   ];
 
-  let selected: Unit[] = [];
-  let selectionBox: { x1: number, y1: number, x2: number, y2: number } | undefined = undefined;
+  const buildings: Building[] = [
+    newBuilding({ x: 100, y: 100 }),
+  ];
 
-  canvas.oncontextmenu = e => e.preventDefault();
-  canvas.addEventListener("mouseup", e => {
-    if (e.button == 0) { // left click
-      if (selectionBox && Math.abs((selectionBox.x1 - selectionBox.x2) * (selectionBox.y1 - selectionBox.y2)) > 25) {
-        selected = units.filter(u => between(u.x, selectionBox!.x1, selectionBox!.x2) && between(u.y, selectionBox!.y1, selectionBox!.y2));
-      } else {
-        units.forEach(unit => {
-          if (inBounds(unit, e.offsetX, e.offsetY)) {
-            selected = [unit];
-          }
-        });
-      }
-    } else if (e.button == 2) { // right click
-      if (selected) {
-        selected.forEach(s => s.movepoint = { x: e.offsetX, y: e.offsetY });
-      }
-    }
-    selectionBox = undefined;
+  const selector = new Selector();
+  const fps = new Fps();
+
+  canvas.oncontextmenu = (e) => e.preventDefault();
+
+  canvas.addEventListener("mousedown", (e) => {
+    selector.onmousedown(e);
   });
 
-  canvas.addEventListener("mousedown", e => {
-    if (e.button == 0) {
-      selectionBox = { x1: e.offsetX, y1: e.offsetY, x2: e.offsetX, y2: e.offsetY };
-    }
+  canvas.addEventListener("mousemove", (e) => {
+    selector.onmousemove(e);
   });
 
-  canvas.addEventListener("mousemove", e => {
-    if (e.button == 0 && selectionBox) {
-      selectionBox.x2 = e.offsetX;
-      selectionBox.y2 = e.offsetY;
-    }
+  canvas.addEventListener("mouseup", (e) => {
+    selector.onmouseup(e, units);
   });
 
-  let fps = 0;
-  let oldtime = 0;
   function update(time: number) {
-    const dt = time - oldtime;
-    oldtime = time;
+    const dt = fps.delta(time);
 
-    units.forEach(unit => {
+    units.forEach((unit) => {
       updateUnit(unit, dt);
     });
 
-    fps = 1000 / dt;
     draw();
     requestAnimationFrame(update);
   }
@@ -70,7 +54,16 @@ function init() {
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, width, height);
 
-    units.forEach(unit => {
+    buildings.forEach((building) => {
+      ctx.strokeStyle = "red";
+      ctx.strokeRect(building.x - building.w / 2, building.y - building.h / 2, building.w, building.h);
+      if (building.rallypoint) {
+        ctx.strokeStyle = "green";
+        ctx.strokeRect(building.rallypoint.x - 5, building.rallypoint.y - 5, 10, 10);
+      }
+    });
+
+    units.forEach((unit) => {
       ctx.fillStyle = "red";
       ctx.fillRect(unit.x - unit.w / 2, unit.y - unit.h / 2, unit.w, unit.h);
       if (unit.movepoint) {
@@ -79,32 +72,9 @@ function init() {
       }
     });
 
-    if (selected) {
-      ctx.strokeStyle = "white";
-      selected.forEach(s => {
-        ctx.strokeRect(s.x - s.w / 2, s.y - s.h / 2, s.w, s.h);
-      })
-    }
-
-    if (selectionBox) {
-      ctx.strokeStyle = "white";
-      let x = Math.min(selectionBox.x1, selectionBox.x2);
-      let y = Math.min(selectionBox.y1, selectionBox.y2);
-      ctx.strokeRect(x, y, Math.abs(selectionBox.x1 - selectionBox.x2), Math.abs(selectionBox.y1 - selectionBox.y2));
-    }
-
-    ctx.fillStyle = "white"
-    ctx.font = "1em monospace"
-    ctx.fillText(`fps: ${Math.round(fps)}`, 7, 20);
+    selector.draw(ctx);
+    fps.draw(ctx);
   }
 
   requestAnimationFrame(update);
-}
-
-function between(x: number, a: number, b: number) {
-  if (a > b) {
-    return x >= b && x <= a;
-  } else {
-    return x <= b && x >= a;
-  }
 }
