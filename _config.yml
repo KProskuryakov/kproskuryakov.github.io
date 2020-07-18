@@ -6,6 +6,7 @@ logo: favicon.png
 
 kramdown:
   parse_block_html: "true"
+  # enable_coderay: "true"
 
 plugins:
   - jekyll-feed

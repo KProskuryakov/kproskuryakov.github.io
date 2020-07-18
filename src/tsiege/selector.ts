@@ -1,5 +1,6 @@
 import { Building } from "./building";
-import { inBounds, isUnit, Unit } from "./unit";
+import { isUnit, Unit } from "./unit";
+import { inBounds, SquareEntity } from "./entity";
 
 export class Selector {
   private selected: Array<Unit | Building> | undefined;

@@ -1,7 +1,8 @@
-import { Building, newBuilding } from "./building";
+import { Building, newBuilding, drawBuilding } from "./building";
 import Fps from "./fps";
 import { Selector } from "./selector";
-import { newUnit, Unit, updateUnit } from "./unit";
+import { newUnit, Unit, updateUnit, drawUnit } from "./unit";
+import { loadAssets } from "./assets";
 
 window.addEventListener("load", () => {
   init();
@@ -11,10 +12,12 @@ function init() {
   const canvas = document.getElementById("tsiege-canvas") as HTMLCanvasElement;
   const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 
+  const images = loadAssets();
+
   const units: Unit[] = [
-    newUnit({x: 50, y: 50}),
-    newUnit({x: 400, y: 400}),
-    newUnit({x: 500, y: 100}),
+    newUnit({x: 50, y: 50, img: images.get("catgirl-forward")}),
+    newUnit({x: 400, y: 400, img: images.get("catgirl-forward")}),
+    newUnit({x: 500, y: 100, img: images.get("catgirl-forward")}),
   ];
 
   const buildings: Building[] = [
@@ -55,21 +58,11 @@ function init() {
     ctx.fillRect(0, 0, width, height);
 
     buildings.forEach((building) => {
-      ctx.strokeStyle = "red";
-      ctx.strokeRect(building.x - building.w / 2, building.y - building.h / 2, building.w, building.h);
-      if (building.rallypoint) {
-        ctx.strokeStyle = "green";
-        ctx.strokeRect(building.rallypoint.x - 5, building.rallypoint.y - 5, 10, 10);
-      }
+      drawBuilding(building, ctx);
     });
 
     units.forEach((unit) => {
-      ctx.fillStyle = "red";
-      ctx.fillRect(unit.x - unit.w / 2, unit.y - unit.h / 2, unit.w, unit.h);
-      if (unit.movepoint) {
-        ctx.strokeStyle = "green";
-        ctx.strokeRect(unit.movepoint.x - 5, unit.movepoint.y - 5, 10, 10);
-      }
+      drawUnit(unit, ctx);
     });
 
     selector.draw(ctx);
